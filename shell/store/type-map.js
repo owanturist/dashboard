@@ -1463,7 +1463,7 @@ export const getters = {
   productByName(state) {
     return (productName) => {
       return state.products.find((p) => p.name === productName);
-    }
+    };
   }
 };
 

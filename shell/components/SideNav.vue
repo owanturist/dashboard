@@ -83,7 +83,6 @@ export default {
         // Immediately update because you'll see it come in later
         this.getGroups();
 
-        //realProduct
         this.updateRealProduct();
 
         // Update showClusterTools
@@ -210,7 +209,7 @@ export default {
       }
 
       return this.currentProduct;
-    },      
+    },
     /**
      * Fetch navigation by creating groups from product schemas
      */
