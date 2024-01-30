@@ -47,6 +47,7 @@ export function init(store) {
     weight:              3,
     showNamespaceFilter: true,
     icon:                'compass',
+    inExplorer:          true,
     typeStoreMap:        {
       [MANAGEMENT.PROJECT]:                       'management',
       [MANAGEMENT.CLUSTER_ROLE_TEMPLATE_BINDING]: 'management',
