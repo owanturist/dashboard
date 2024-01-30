@@ -12,6 +12,7 @@ import {
 } from '@shell/utils/array';
 import { sortBy } from '@shell/utils/sort';
 import { ucFirst } from '@shell/utils/string';
+import { productDidChange, getParentProduct } from '@shell/utils/products';
 
 import { HCI, CATALOG, UI, SCHEMA } from '@shell/config/types';
 import { HARVESTER_NAME as HARVESTER } from '@shell/config/features';
@@ -25,8 +26,10 @@ export default {
   components: { Group },
   data() {
     return {
-      groups:        [],
-      gettingGroups: false
+      groups:           [],
+      gettingGroups:    false,
+      showClusterTools: false,
+      realProduct:      null,
     };
   },
 
@@ -37,6 +40,8 @@ export default {
   },
 
   mounted() {
+    this.updateRealProduct();
+
     // Sync the navigation tree on fresh load
     this.$nextTick(() => this.syncNav());
   },
@@ -74,20 +79,28 @@ export default {
     },
 
     productId(a, b) {
-      if ( a !== b) {
+      if (productDidChange(a, b)) {
         // Immediately update because you'll see it come in later
         this.getGroups();
+
+        //realProduct
+        this.updateRealProduct();
+
+        // Update showClusterTools
+        this.showClusterTools = this.isExplorer &&
+          this.$store.getters['cluster/canList'](CATALOG.CLUSTER_REPO) &&
+          this.$store.getters['cluster/canList'](CATALOG.APP);
       }
     },
 
     // Queue namespaceMode and namespaces
     // Changes to namespaceMode can also change namespaces, so keep this simple and execute both in a shortened queue
 
-    namespaceMode(a, b) {
-      if ( a !== b ) {
-        this.queueUpdate();
-      }
-    },
+    // namespaceMode(a, b) {
+    //   if ( a !== b ) {
+    //     this.queueUpdate();
+    //   }
+    // },
 
     namespaces(a, b) {
       if ( !isEqual(a, b) ) {
@@ -116,14 +129,8 @@ export default {
 
     favoriteTypes: mapPref(FAVORITE_TYPES),
 
-    showClusterTools() {
-      return this.isExplorer &&
-             this.$store.getters['cluster/canList'](CATALOG.CLUSTER_REPO) &&
-             this.$store.getters['cluster/canList'](CATALOG.APP);
-    },
-
     supportLink() {
-      const product = this.currentProduct;
+      const product = this.realProduct;
 
       if (product?.supportRoute) {
         return { ...product.supportRoute, params: { ...product.supportRoute.params, cluster: this.clusterId } };
@@ -158,7 +165,7 @@ export default {
     },
 
     isVirtualProduct() {
-      return this.currentProduct.name === HARVESTER;
+      return this.realProduct?.name === HARVESTER;
     },
 
     allNavLinks() {
@@ -171,7 +178,7 @@ export default {
 
     allSchemasIds() {
       const managementReady = this.managementReady;
-      const product = this.currentProduct;
+      const product = this.realProduct;
 
       if ( !managementReady || !product ) {
         return [];
@@ -191,6 +198,19 @@ export default {
   },
 
   methods: {
+    updateRealProduct() {
+      const parent = getParentProduct(this.currentProduct.name);
+
+      if (parent) {
+        const pProduct = this.$store.getters['type-map/productByName'](parent);
+
+        if (pProduct) {
+          return pProduct;
+        }
+      }
+
+      return this.currentProduct;
+    },      
     /**
      * Fetch navigation by creating groups from product schemas
      */

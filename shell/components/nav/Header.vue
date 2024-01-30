@@ -55,7 +55,7 @@ export default {
       LOGGED_OUT,
       navHeaderRight:         null,
       extensionHeaderActions: getApplicableExtensionEnhancements(this, ExtensionPoint.ACTION, ActionLocation.HEADER, this.$route),
-      ctx:                    this
+      ctx:                    this,
     };
   },
 
@@ -123,7 +123,7 @@ export default {
       // Don't show if the header is in 'simple' mode
       const notSimple = !this.simple;
       // One of these must be enabled, otherwise t here's no component to show
-      const validFilterSettings = this.currentProduct.showNamespaceFilter || this.currentProduct.showWorkspaceSwitcher;
+      const validFilterSettings = this.currentProduct?.showNamespaceFilter || this.currentProduct?.showWorkspaceSwitcher;
 
       return validClusterOrProduct && notSimple && validFilterSettings;
     },
@@ -137,7 +137,7 @@ export default {
     },
 
     prod() {
-      const name = this.currentProduct.name;
+      const name = this.currentProduct?.name;
 
       return this.$store.getters['i18n/withFallback'](`product."${ name }"`, null, ucFirst(name));
     },

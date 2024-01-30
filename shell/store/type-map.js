@@ -149,6 +149,8 @@ import { normalizeType } from '@shell/plugins/dashboard-store/normalize';
 import { sortBy } from '@shell/utils/sort';
 
 import { haveV1Monitoring, haveV2Monitoring } from '@shell/utils/monitoring';
+import { setParentProduct } from '@shell/utils/products';
+
 import { NEU_VECTOR_NAMESPACE } from '@shell/config/product/neuvector';
 
 export const NAMESPACED = 'namespaced';
@@ -1457,6 +1459,12 @@ export const getters = {
       return !!prod;
     };
   },
+
+  productByName(state) {
+    return (productName) => {
+      return state.products.find((p) => p.name === productName);
+    }
+  }
 };
 
 export const mutations = {
@@ -1520,8 +1528,10 @@ export const mutations = {
 
     if ( existing ) {
       Object.assign(existing, obj);
+      setParentProduct(existing);
     } else {
       addObject(state.products, obj);
+      setParentProduct(obj);
     }
   },
 

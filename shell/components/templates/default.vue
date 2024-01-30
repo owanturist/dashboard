@@ -22,7 +22,6 @@ import DraggableZone from '@shell/components/DraggableZone';
 import { MANAGEMENT } from '@shell/config/types';
 import isEqual from 'lodash/isEqual';
 import { markSeenReleaseNotes } from '@shell/utils/version';
-import PageHeaderActions from '@shell/mixins/page-actions';
 import BrowserTabVisibility from '@shell/mixins/browser-tab-visibility';
 import { getClusterFromRoute, getProductFromRoute } from '@shell/middleware/authenticated';
 import { BOTTOM } from '@shell/utils/position';
@@ -50,7 +49,7 @@ export default {
     SideNav,
   },
 
-  mixins: [PageHeaderActions, Brand, BrowserTabVisibility],
+  mixins: [Brand, BrowserTabVisibility],
 
   // Note - This will not run on route change
   data() {
@@ -70,32 +69,11 @@ export default {
 
   computed: {
     ...mapState(['managementReady', 'clusterReady']),
-    ...mapGetters(['clusterId', 'currentProduct', 'isRancherInHarvester', 'showTopLevelMenu']),
+    ...mapGetters(['clusterId', 'currentProduct', 'realProduct', 'isRancherInHarvester', 'showTopLevelMenu']),
 
     afterLoginRoute: mapPref(AFTER_LOGIN_ROUTE),
 
     themeShortcut: mapPref(THEME_SHORTCUT),
-
-    pageActions() {
-      const pageActions = [];
-      const product = this.currentProduct;
-
-      if ( !product ) {
-        return [];
-      }
-
-      // Only show for Cluster Explorer or Global Apps (not configuration)
-      const canSetAsHome = product.inStore === 'cluster' || (product.inStore === 'management' && product.category !== 'configuration') || this.isRancherInHarvester;
-
-      if (canSetAsHome) {
-        pageActions.push({
-          labelKey: 'nav.header.setLoginPage',
-          action:   SET_LOGIN_ACTION
-        });
-      }
-
-      return pageActions;
-    },
 
     unmatchedRoute() {
       return !this.$route?.matched?.length;
