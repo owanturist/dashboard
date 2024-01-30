@@ -14,6 +14,7 @@ export function init(store) {
     weight:              80,
     ifFeature:           LEGACY,
     showNamespaceFilter: true,
+    inExplorer:          true,    
   });
 
   virtualType({

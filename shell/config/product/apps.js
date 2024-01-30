@@ -28,7 +28,8 @@ export function init(store) {
     weight:              97,
     ifHaveGroup:         'catalog.cattle.io',
     icon:                'marketplace',
-    showNamespaceFilter: true
+    showNamespaceFilter: true,
+    inExplorer:          true,
   });
 
   virtualType({
