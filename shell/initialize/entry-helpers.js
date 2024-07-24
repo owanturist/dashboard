@@ -95,7 +95,7 @@ export const promisify = (fn, context) => {
   return Promise.resolve(promise);
 };
 
-export const globalHandleError = (error) => vueApp.config.errorHandler && vueApp.config.errorHandler(error);
+export const globalHandleError = (error, vueApp) => vueApp.config.errorHandler && vueApp.config.errorHandler(error);
 
 /**
  * Render function used by the router guards
@@ -141,31 +141,33 @@ async function render(to, from, next) {
   }
 
   // Get route's matched components
-  const matches = [];
-  const Components = getMatchedComponents(to, matches);
+  // const matches = [];
+  // const Components = getMatchedComponents(to, matches);
 
   try {
     // Call .validate()
-    let isValid = true;
+    const isValid = true;
 
-    try {
-      for (const Component of Components) {
-        if (typeof Component.options.validate !== 'function') {
-          continue;
-        }
+    console.log('WHAT IS THIS', { that: this });
 
-        isValid = await Component.options.validate(app.context);
+    // try {
+    //   for (const Component of Components) {
+    //     if (typeof Component.options.validate !== 'function') {
+    //       continue;
+    //     }
 
-        if (!isValid) {
-          break;
-        }
-      }
-    } catch (validationError) {
-      // ...If .validate() threw an error
-      errorRedirect(this, new Error(`${ validationError.statusCode || '500' }: ${ validationError.message }`));
+    //     isValid = await Component.options.validate(app.context);
 
-      return next();
-    }
+    //     if (!isValid) {
+    //       break;
+    //     }
+    //   }
+    // } catch (validationError) {
+    //   // ...If .validate() threw an error
+    //   errorRedirect(this, new Error(`${ validationError.statusCode || '500' }: ${ validationError.message }`));
+
+    //   return next();
+    // }
 
     // ...If .validate() returned false
     if (!isValid) {
@@ -185,7 +187,7 @@ async function render(to, from, next) {
   } catch (err) {
     const error = err || {};
 
-    globalHandleError(error);
+    globalHandleError(error, this);
 
     next();
   }
@@ -201,9 +203,12 @@ export async function mountApp(appPartials, vueApp) {
   app = appPartials.app;
   const router = appPartials.router;
 
+  vueApp.use(router);
+  vueApp.use(app.store);
+
   // Mounts Vue app to DOM element
   const mount = () => {
-    vueApp.$mount('#app');
+    vueApp.mount('#app');
   };
 
   // Initialize error handler
@@ -265,15 +270,30 @@ export const getMatchedComponents = (route, matches = false, prop = 'components'
    * @param {*} route
    * @returns
    */
-export const getRouteData = (route) => {
+export const getRouteData = async(route) => {
   if (!route) {
     return;
   }
 
-  const meta = route.matched.map((record) => record.meta || {});
+  // Ensure we're working with the _value property of the route object
+  const routeValue = route._value || route;
+
+  if (!routeValue.matched) {
+    console.warn('Route matched property is undefined:', routeValue);
+
+    return routeValue;
+  }
+
+  const meta = routeValue.matched.map((record) => {
+    // Merge component meta and route record meta
+    const componentMeta = record.components?.default?.meta || {};
+    const recordMeta = record.meta || {};
+
+    return { ...componentMeta, ...recordMeta };
+  });
 
   return {
-    ...route,
+    ...routeValue,
     meta
   };
 };
