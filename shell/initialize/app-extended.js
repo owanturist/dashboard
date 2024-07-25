@@ -59,18 +59,6 @@ async function extendApp(vueApp) {
   const path = getLocation(router.options.base, router.options.mode);
   const route = router.resolve(path);
 
-  console.log('NOT FAIL');
-  console.log('NOT FAIL');
-  console.log('NOT FAIL');
-  console.log('NOT FAIL');
-  console.log({
-    path, route, router, resolve: router.resolve(path)
-  });
-  console.log('NOT FAIL');
-  console.log('NOT FAIL');
-  console.log('NOT FAIL');
-  console.log('NOT FAIL');
-
   // Set context to app.context
   await setContext(
     appPartials,
@@ -89,13 +77,13 @@ async function extendApp(vueApp) {
   // Wait for async component to be resolved first
   await new Promise((resolve, reject) => {
     // Ignore 404s rather than blindly replacing URL in browser
-    const route = router.resolve(router.currentRoute.value.fullPath);
+    const route = router.resolve(appPartials.context.route.fullPath);
 
     if (!route.matched.length) {
       return resolve();
     }
 
-    router.replace(router.currentRoute.value.fullPath).then(resolve, (err) => {
+    router.replace(appPartials.context.route.fullPath).then(resolve, (err) => {
       // https://github.com/vuejs/vue-router/blob/v3.4.3/src/util/errors.js
       if (!err._isRouter) {
         return reject(err);
