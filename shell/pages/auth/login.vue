@@ -211,9 +211,9 @@ export default {
       let elem;
 
       if ( this.username ) {
-        elem = this.$refs.password;
+        elem = this.$refs.inputPassword;
       } else {
-        elem = this.$refs.username;
+        elem = this.$refs.inputUsername;
       }
 
       if ( elem?.focus ) {
@@ -410,7 +410,7 @@ export default {
                 <LabeledInput
                   v-if="!firstLogin"
                   id="username"
-                  ref="username"
+                  ref="inputUsername"
                   v-model.trim="username"
                   data-testid="local-login-username"
                   :label="t('login.username')"
@@ -420,7 +420,7 @@ export default {
               <div class="">
                 <Password
                   id="password"
-                  ref="password"
+                  ref="inputPassword"
                   v-model="password"
                   data-testid="local-login-password"
                   :label="t('login.password')"

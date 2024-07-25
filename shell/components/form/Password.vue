@@ -7,7 +7,7 @@ import { copyTextToClipboard } from '@shell/utils/clipboard';
 export default {
   components: { LabeledInput },
   props:      {
-    value: {
+    modelValue: {
       default: '',
       type:    String,
     },
@@ -43,10 +43,10 @@ export default {
     ...mapGetters({ t: 'i18n/t' }),
     password: {
       get() {
-        return this.value;
+        return this.modelValue;
       },
       set(val) {
-        this.$emit('input', val);
+        this.$emit('update:modelValue', val);
       }
     },
     attributes() {
@@ -78,13 +78,15 @@ export default {
   methods: {
     copyTextToClipboard,
     generatePassword() {
-      this.password = randomStr(16, CHARSET.ALPHA_NUM);
+      const newPassword = randomStr(16, CHARSET.ALPHA_NUM);
+
+      this.$emit('update:modelValue', newPassword);
     },
     show(reveal) {
       this.reveal = reveal;
     },
     focus() {
-      this.$refs.input.$refs.value.focus();
+      this.$refs.inputPassword.$refs.value.focus();
     }
   }
 };
@@ -93,7 +95,7 @@ export default {
 <template>
   <div class="password">
     <LabeledInput
-      ref="input"
+      ref="inputPassword"
       v-model="password"
       v-bind="attributes"
       :type="isRandom || reveal ? 'text' : 'password'"
