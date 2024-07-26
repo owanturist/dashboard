@@ -35,7 +35,7 @@ export default [
     name:      'fail-whale'
   },
   {
-    path:      '',
+    path:      '/',
     component: () => interopDefault(import('@shell/components/templates/blank.vue')),
     name:      'blank',
     meta:      { requiresAuthentication: true },
@@ -43,7 +43,7 @@ export default [
     ]
   },
   {
-    path:      '',
+    path:      '/',
     component: () => interopDefault(import('@shell/components/templates/home.vue')),
     meta:      { requiresAuthentication: true },
     children:  [
@@ -60,7 +60,7 @@ export default [
     ]
   },
   {
-    path:      '',
+    path:      '/',
     component: () => interopDefault(import('@shell/components/templates/plain.vue')),
     name:      'plain',
     meta:      { requiresAuthentication: true },
@@ -123,14 +123,14 @@ export default [
     ]
   },
   {
-    path:      '',
+    path:      '/',
     component: () => interopDefault(import('@shell/components/templates/standalone.vue')),
     name:      'standalone',
     children:  [
     ]
   },
   {
-    path:      '',
+    path:      '/',
     component: () => interopDefault(import('@shell/components/templates/unauthenticated.vue')),
     name:      'unauthenticated',
     children:  [
@@ -156,7 +156,7 @@ export default [
     ]
   },
   {
-    path:      '',
+    path:      '/',
     component: () => interopDefault(import('@shell/components/templates/default.vue')),
     name:      'default',
     meta:      { requiresAuthentication: true },
