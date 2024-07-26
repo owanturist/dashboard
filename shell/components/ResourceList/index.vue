@@ -45,9 +45,18 @@ export default {
     const schema = this.schema;
 
     if ( this.hasListComponent ) {
+      let listComponent = false;
+
+      const resource = this.$route.params.resource;
+
+      listComponent = this.$store.getters['type-map/importList'](resource);
+
+      if (listComponent) {
+        this.listComponent = (await listComponent()).default;
+      }
+
       // If you provide your own list then call its fetch
-      const importer = this.listComponent;
-      const component = (await importer())?.default;
+      const component = this.listComponent;
 
       if ( component?.typeDisplay ) {
         this.customTypeDisplay = component.typeDisplay.apply(this);
@@ -193,19 +202,6 @@ export default {
         });
       }
     },
-  },
-
-  created() {
-    let listComponent = false;
-
-    const resource = this.$route.params.resource;
-    const hasListComponent = this.$store.getters['type-map/hasCustomList'](resource);
-
-    if ( hasListComponent ) {
-      listComponent = this.$store.getters['type-map/importList'](resource);
-    }
-
-    this.listComponent = listComponent;
   },
 };
 </script>
