@@ -57,7 +57,7 @@ export default {
     </div>
     <BadgeState
       v-else
-      :modelValue="row"
+      :value="row"
     />
   </div>
 </template>

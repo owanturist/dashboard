@@ -1367,13 +1367,13 @@ export default {
                         :name="'cell:' + col.col.name"
                         :row="row.row"
                         :col="col.col"
-                        :modelValue="col.value"
+                        :value="col.value"
                       >
                         <component
                           :is="col.component"
                           v-if="col.component && col.needRef"
                           ref="column"
-                          :modelValue="col.value"
+                          :value="col.value"
                           :row="row.row"
                           :col="col.col"
                           v-bind="col.col.formatterOpts"
@@ -1383,7 +1383,7 @@ export default {
                         <component
                           :is="col.component"
                           v-else-if="col.component"
-                          :modelValue="col.value"
+                          :value="col.value"
                           :row="row.row"
                           :col="col.col"
                           v-bind="col.col.formatterOpts"
@@ -1392,7 +1392,7 @@ export default {
                         <component
                           :is="col.col.formatter"
                           v-else-if="col.col.formatter"
-                          :modelValue="col.value"
+                          :value="col.value"
                           :row="row.row"
                           :col="col.col"
                           v-bind="col.col.formatterOpts"
