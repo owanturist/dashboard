@@ -14,7 +14,14 @@ export default {
   name: 'LabeledSelect',
 
   components: { LabeledTooltip },
-  mixins:     [CompactInput, LabeledFormElement, VueSelectOverrides, LabeledSelectPagination],
+  mixins:     [
+    CompactInput,
+    LabeledFormElement,
+    VueSelectOverrides,
+    LabeledSelectPagination
+  ],
+
+  emits: ['on-open', 'on-close', 'selecting'],
 
   props: {
     appendToBody: {
@@ -87,7 +94,7 @@ export default {
       default: null,
       type:    [String, Object]
     },
-    value: {
+    modelValue: {
       default: null,
       type:    [String, Object, Number, Array, Boolean]
     },
@@ -290,7 +297,7 @@ export default {
       :filterable="isFilterable"
       :searchable="isSearchable"
       :selectable="selectable"
-      :modelValue="value != null && !loading ? value : ''"
+      :modelValue="modelValue != null && !loading ? modelValue : ''"
       :dropdown-should-open="dropdownShouldOpen"
 
       @search:blur="onBlur"

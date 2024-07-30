@@ -7,8 +7,12 @@ import { onClickOption, calculatePosition } from '@shell/utils/select';
 
 export default {
   components: { LabeledTooltip },
-  mixins:     [LabeledFormElement, VueSelectOverrides],
-  props:      {
+  mixins:     [
+    LabeledFormElement,
+    VueSelectOverrides
+  ],
+  emits: ['createdListItem', 'on-focus', 'on-blur'],
+  props: {
     appendToBody: {
       default: true,
       type:    Boolean,
@@ -69,7 +73,7 @@ export default {
       type:    String,
       default: null,
     },
-    value: {
+    modelValue: {
       default: null,
       type:    [String, Object, Number, Array, Boolean],
     },
@@ -177,7 +181,7 @@ export default {
       // we want to grab the required rule passed in if we can but if it's not there then we can just grab it from the formRulesGenerator
       const requiredRule = this.rules.find((rule) => rule?.name === 'required');
       const ruleMessages = [];
-      const value = this?.value;
+      const value = this?.modelValue;
 
       if (requiredRule && this.blurred && !this.focused) {
         const message = requiredRule(value);
@@ -237,7 +241,7 @@ export default {
       :reduce="(x) => reduce(x)"
       :searchable="isSearchable"
       :selectable="selectable"
-      :modelValue="value != null ? value : ''"
+      :modelValue="modelValue != null ? modelValue : ''"
 
       @search:blur="onBlur"
       @search:focus="onFocus"
